@@ -1,12 +1,20 @@
 use crate::entity::{
     request::signin_request::SigninRequestData,
-    response::api_response::ApiResponse,
+    response::{
+        api_response::ApiResponse,
+        bad_request::BadRequest,
+    },
 };
 use actix_web::{Responder, Result};
 
 
-pub async fn signin(payload: SigninRequestData) -> Result<impl Responder> {
+pub async fn signin(payload: SigninRequestData) -> Result<impl Responder, BadRequest> {
+    if payload.email.is_empty() {
+        return Err(BadRequest { message: "Email is not empty".to_string() })
+    }
+
     let response = ApiResponse::<()>::new(Some(format!("success {}", payload.email)), None);
+
     Ok(response.to_json())
 }
 
