@@ -1,4 +1,9 @@
 services:
+  web:
+    build: ./docker/nginx
+    container_name: web_nginx
+    restart: always
+
   db:
     build: ./docker/postgres
     container_name: postgres_db
