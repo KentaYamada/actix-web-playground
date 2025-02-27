@@ -3,17 +3,73 @@ services:
     build: ./docker/nginx
     container_name: web_nginx
     restart: always
+    networks:
+      - my_network
     ports:
       - '8080:80'
     volumes:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./docker/nginx/logs:/var/log/nginx
-      - ./docker/nginx/index.html:/user/share/nginx/html/index.html
+    depends_on:
+      api:
+        condition: service_started
+      frontend:
+        condition: service_started
+
+  # todo: move directory
+  api:
+    build:
+      context: .
+    container_name: api_app
+    restart: always
+    environment:
+      - RUST_LOG:${RUST_LOG}
+    networks:
+      - my_network
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./Cargo.toml:/app/Cargo.toml
+      - ./Cargo.lock:/app/Cargo.lock
+      - ./.env:/app/.env
+      - ./src/:/app/src
+    command: |
+      cargo run
+    develop:
+      watch:
+        - action: rebuild
+          path: ./src
+        - action: rebuild
+          path: ./Cargo.toml
+        - action: rebuild
+          path: ./Cargo.lock
+    depends_on:
+      db:
+        condition: service_started
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend_app
+    restart: always
+    networks:
+      - my_network
+    ports:
+      - '5173:5173'
+    volumes:
+      - /app/frontend/node_modules
+      - ./frontend/:/app/frontend
+    command: |
+      npm run dev
+    working_dir: /app/frontend
+    tty: true
 
   db:
     build: ./docker/postgres
     container_name: postgres_db
     restart: always
+    networks:
+      - my_network
     env_file:
       - .env
     environment:
@@ -29,6 +85,8 @@ services:
     image: dpage/pgadmin4
     container_name: pgadmin
     restart: always
+    networks:
+      - my_network
     env_file: 
       - .env
     environment:
@@ -37,7 +95,11 @@ services:
     ports:
       - '5050:80'
     depends_on:
-      - db
+      db:
+        condition: service_started
 
 volumes:
   postgres_data:
+
+networks:
+  my_network:
