@@ -1,6 +1,7 @@
 services:
   web:
-    build: ./docker/nginx
+    build:
+      context: ./docker/nginx
     container_name: web_nginx
     restart: always
     networks:
@@ -16,10 +17,9 @@ services:
       frontend:
         condition: service_started
 
-  # todo: move directory
   api:
     build:
-      context: .
+      context: ./backend
     container_name: api_app
     restart: always
     environment:
@@ -29,20 +29,21 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - ./Cargo.toml:/app/Cargo.toml
-      - ./Cargo.lock:/app/Cargo.lock
+      - ./backend/Cargo.toml:/app/Cargo.toml
+      - ./backend/Cargo.lock:/app/Cargo.lock
       - ./.env:/app/.env
-      - ./src/:/app/src
+      - ./backend/src/:/app/src
     command: |
       cargo run
     develop:
       watch:
         - action: rebuild
-          path: ./src
+          path: ./backend/src
         - action: rebuild
-          path: ./Cargo.toml
+          path: ./backend/Cargo.toml
         - action: rebuild
-          path: ./Cargo.lock
+          path: ./backend/Cargo.lock
+    working_dir: /app/backend
     depends_on:
       db:
         condition: service_started
@@ -65,7 +66,8 @@ services:
     tty: true
 
   db:
-    build: ./docker/postgres
+    build:
+      context: ./docker/postgres
     container_name: postgres_db
     restart: always
     networks:
