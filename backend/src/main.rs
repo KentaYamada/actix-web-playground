@@ -3,7 +3,7 @@ mod entity;
 mod repository;
 
 use actix_web::{guard, web, App, HttpServer};
-use api::users::{create::create, signin::signin, view::view};
+use api::users::{create::create, signin::signin, update::update, view::view};
 use dotenv::dotenv;
 use entity::app_state::AppState;
 use sqlx::postgres::PgPoolOptions;
@@ -28,6 +28,7 @@ async fn main() -> std::io::Result<()> {
                     .guard(guard::Header("content-type", "application/json"))
                     .route("/users", web::post().to(create))
                     .route("/users/{id}", web::get().to(view))
+                    .route("/users/{id}", web::patch().to(update))
                     .route("/users/signin", web::post().to(signin)),
             )
     })
