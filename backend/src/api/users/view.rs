@@ -1,17 +1,13 @@
-use crate::entity::{
-    request::user_view_request::UserViewRequestData, response::api_response::ApiResponse,
-    user::User,
-};
-use actix_web::{Responder, Result};
+use crate::entity::{app_state::AppState, response::api_response::ApiResponse, user::User};
+use crate::repository::users::fetch_user_by_id::fetch_user_by_id;
+use actix_web::{web, Responder, Result};
 
-pub async fn view(payload: UserViewRequestData) -> Result<impl Responder> {
-    let user = User::new(
-        payload.id,
-        String::from("Foo"),
-        String::from("Bar"),
-        String::from("foo@email.com"),
-        String::from("foobar"),
-    );
+pub type UserViewRequestPath = web::Path<i32>;
+
+pub async fn view(state: web::Data<AppState>, path: UserViewRequestPath) -> Result<impl Responder> {
+    let user: User = fetch_user_by_id(&state.db, path.into_inner())
+        .await
+        .unwrap();
     let response = ApiResponse::new(None, Some(user));
 
     Ok(response.to_json())
