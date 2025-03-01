@@ -24,10 +24,10 @@ pub async fn create(
 ) -> Result<impl Responder> {
     let user = User::new(
         0,
-        payload.first_name.clone(),
-        payload.family_name.clone(),
-        payload.email.clone(),
-        payload.password.clone(),
+        &payload.first_name,
+        &payload.family_name,
+        &payload.email,
+        &payload.password,
     );
 
     let id = create_user(&state.db, &user).await.unwrap();

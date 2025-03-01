@@ -11,19 +11,13 @@ pub struct User {
 }
 
 impl User {
-    pub fn new(
-        id: i32,
-        first_name: String,
-        family_name: String,
-        email: String,
-        password: String,
-    ) -> Self {
+    pub fn new(id: i32, first_name: &str, family_name: &str, email: &str, password: &str) -> Self {
         Self {
             id,
-            first_name,
-            family_name,
-            email,
-            password,
+            first_name: first_name.to_string(),
+            family_name: family_name.to_string(),
+            email: email.to_string(),
+            password: password.to_string(),
         }
     }
 }

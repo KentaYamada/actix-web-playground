@@ -27,10 +27,10 @@ pub async fn update(
 ) -> Result<impl Responder> {
     let user = User::new(
         path.into_inner(),
-        payload.first_name.clone(),
-        payload.family_name.clone(),
-        payload.email.clone(),
-        payload.password.clone(),
+        &payload.first_name,
+        &payload.family_name,
+        &payload.email,
+        &payload.password,
     );
 
     let id = update_user(&state.db, &user).await.unwrap();
