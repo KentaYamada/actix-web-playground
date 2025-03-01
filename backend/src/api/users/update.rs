@@ -11,6 +11,11 @@ pub struct UpdateUserRequestBody {
     pub password: String,
 }
 
+#[derive(Debug, Serialize)]
+pub struct UpdateUserResponseBody {
+    pub id: i32,
+}
+
 pub type UpdateUserPath = web::Path<i32>;
 
 pub type UpdateUserRequest = web::Json<UpdateUserRequestBody>;
@@ -28,9 +33,12 @@ pub async fn update(
         payload.password.clone(),
     );
 
-    update_user(&state.db, &user).await.unwrap();
+    let id = update_user(&state.db, &user).await.unwrap();
 
-    let response = ApiResponse::<()>::new(Some("user updated".to_string()), None);
+    let response = ApiResponse::new(
+        Some("Update successfully".to_string()),
+        Some(UpdateUserResponseBody { id }),
+    );
 
     Ok(response.to_json())
 }

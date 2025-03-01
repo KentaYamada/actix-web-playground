@@ -1,6 +1,12 @@
 use crate::entity::{app_state::AppState, response::api_response::ApiResponse, user::User};
 use crate::repository::users::fetch_user_by_id::fetch_user_by_id;
 use actix_web::{web, Responder, Result};
+use serde::Serialize;
+
+#[derive(Serialize)]
+pub struct UserViewResponseBody {
+    pub user: User,
+}
 
 pub type UserViewRequestPath = web::Path<i32>;
 
@@ -8,7 +14,7 @@ pub async fn view(state: web::Data<AppState>, path: UserViewRequestPath) -> Resu
     let user: User = fetch_user_by_id(&state.db, path.into_inner())
         .await
         .unwrap();
-    let response = ApiResponse::new(None, Some(user));
+    let response = ApiResponse::new(None, Some(UserViewResponseBody { user }));
 
     Ok(response.to_json())
 }

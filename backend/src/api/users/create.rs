@@ -11,6 +11,11 @@ pub struct CreateUserRequestBody {
     pub password: String,
 }
 
+#[derive(Debug, Serialize)]
+pub struct CreateUserResponseBody {
+    pub id: i32,
+}
+
 pub type CreateUserRequest = web::Json<CreateUserRequestBody>;
 
 pub async fn create(
@@ -25,9 +30,12 @@ pub async fn create(
         payload.password.clone(),
     );
 
-    create_user(&state.db, &user).await.unwrap();
+    let id = create_user(&state.db, &user).await.unwrap();
 
-    let response = ApiResponse::<()>::new(Some("user created".to_string()), None);
+    let response = ApiResponse::new(
+        Some("Create successfully".to_string()),
+        Some(CreateUserResponseBody { id }),
+    );
 
     Ok(response.to_json())
 }
