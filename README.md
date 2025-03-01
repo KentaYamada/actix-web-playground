@@ -39,14 +39,19 @@ graph TD;
 
 ## Getting started
 ### Pre-requirements
+- your favarite editor or IDE
 - docker & docker compose
+- jq (recommended)
 
 ### 1. Run docker 
 ``` sh
 #build images
 docker compose build --no-cache
+
 # run containers
 docker compose up
+or
+docker compose up -d
 ```
 Note: Configure PgAdmin and Postgres access information in the .env file.
 
