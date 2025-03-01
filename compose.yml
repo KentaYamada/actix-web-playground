@@ -31,7 +31,7 @@ services:
     volumes:
       - ./backend/Cargo.toml:/app/Cargo.toml
       - ./backend/Cargo.lock:/app/Cargo.lock
-      - ./.env:/app/.env
+      - ./backend/.env:/app/.env
       - ./backend/src/:/app/src
     command: |
       cargo run
