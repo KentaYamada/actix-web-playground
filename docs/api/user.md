@@ -117,7 +117,7 @@ curl -X POST http://localhost:8080/api/users \
         "family_name": "fuga",
         "email": "hoge@email.com",
         "password": "dev"
-    }' 
+    }' \
     | jq
 
 # dump header if you need.
@@ -168,7 +168,7 @@ curl -i -X PATCH http://localhost:8080/api/users/1 \
         "family_name": "fuga",
         "email": "hoge@email.com",
         "password": "dev"
-    }' 
+    }' \
     | jq
 
 # dump header if you need.
