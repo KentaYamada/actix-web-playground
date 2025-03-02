@@ -22,17 +22,15 @@ services:
       context: ./backend
     container_name: api_app
     restart: always
-    environment:
-      - RUST_LOG:${RUST_LOG}
     networks:
       - my_network
     ports:
       - '3000:3000'
     volumes:
+      - ./backend/.env:/app/backend/.env
       - ./backend/Cargo.toml:/app/Cargo.toml
       - ./backend/Cargo.lock:/app/Cargo.lock
-      - ./backend/.env:/app/.env
-      - ./backend/src/:/app/src
+      - ./backend/src:/app/src
     command: |
       cargo run
     develop:
