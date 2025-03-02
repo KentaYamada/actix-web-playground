@@ -3,8 +3,11 @@ mod entity;
 mod repository;
 
 use actix_web::{guard, web, App, HttpServer};
-use api::users::{
-    create::create, delete::delete, list::list, signin::signin, update::update, view::view,
+use api::{
+    todos,
+    users::{
+        create::create, delete::delete, list::list, signin::signin, update::update, view::view,
+    },
 };
 use dotenv::dotenv;
 use entity::app_state::AppState;
@@ -33,7 +36,8 @@ async fn main() -> std::io::Result<()> {
                     .route("/users/{id}", web::get().to(view))
                     .route("/users/{id}", web::patch().to(update))
                     .route("/users/{id}", web::delete().to(delete))
-                    .route("/users/signin", web::post().to(signin)),
+                    .route("/users/signin", web::post().to(signin))
+                    .route("/todos", web::post().to(todos::create::create)),
             )
     })
     .bind(("0.0.0.0", 3000))?
