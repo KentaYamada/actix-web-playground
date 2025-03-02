@@ -37,7 +37,8 @@ async fn main() -> std::io::Result<()> {
                     .route("/users/{id}", web::patch().to(update))
                     .route("/users/{id}", web::delete().to(delete))
                     .route("/users/signin", web::post().to(signin))
-                    .route("/todos", web::post().to(todos::create::create)),
+                    .route("/todos", web::post().to(todos::create::create))
+                    .route("/todos/{id}", web::patch().to(todos::update::update)),
             )
     })
     .bind(("0.0.0.0", 3000))?
