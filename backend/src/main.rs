@@ -40,7 +40,8 @@ async fn main() -> std::io::Result<()> {
                     .route("/todos", web::get().to(todos::list::list))
                     .route("/todos", web::post().to(todos::create::create))
                     .route("/todos/{id}", web::get().to(todos::view::view))
-                    .route("/todos/{id}", web::patch().to(todos::update::update)),
+                    .route("/todos/{id}", web::patch().to(todos::update::update))
+                    .route("/todos/{id}", web::delete().to(todos::delete::delete)),
             )
     })
     .bind(("0.0.0.0", 3000))?
