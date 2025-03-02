@@ -1,5 +1,6 @@
 # actix-web-playground
-Rust Web application playground.
+Rust Web application playground.  
+Implement simple todo application.
 
 ## Technology Stacks
 - Backend
