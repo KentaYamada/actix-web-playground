@@ -1,0 +1,6 @@
+.git/
+.gitkeep
+coverage/
+dist/
+node_modules/
+README.md
