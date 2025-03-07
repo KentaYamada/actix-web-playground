@@ -3,7 +3,8 @@ import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
-import eslintPrettierRecommended from "eslint-plugin-prettier";
+import eslintPrettierRecommended from "eslint-plugin-prettier/recommended";
+import vitest from "@vitest/eslint-plugin";
 
 export default tseslint.config(
   eslintPrettierRecommended,
@@ -25,6 +26,24 @@ export default tseslint.config(
         "warn",
         { allowConstantExport: true },
       ],
+    },
+  },
+  {
+    files: ["src/**/*.test.{ts,tsx}", "tests/**"],
+    plugins: { vitest },
+    rules: {
+      ...vitest.configs.recommended.rules,
+      "vitest/max-nested-describe": ["error", { max: 2 }],
+    },
+    settings: {
+      vitest: {
+        typecheck: true,
+      },
+    },
+    languageOptions: {
+      globals: {
+        ...vitest.environments.env.globals,
+      },
     },
   },
 );

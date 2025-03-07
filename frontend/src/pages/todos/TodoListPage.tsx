@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Todo } from "../../entity";
+import { Todo } from "@entity";
 
 export function TodoListPage() {
   const [todos, setTodos] = useState<Todo[]>([]);

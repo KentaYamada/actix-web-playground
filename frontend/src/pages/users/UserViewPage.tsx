@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
-import { User } from "../../entity";
+import { User } from "@entity";
 
 export function UserViewPage() {
   const { id } = useParams();
