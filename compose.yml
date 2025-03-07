@@ -60,6 +60,10 @@ services:
       - ./frontend/:/app/frontend
     command: |
       npm run dev
+    develop:
+      watch:
+        - action: rebuild
+          path: ./frontend/package.json
     working_dir: /app/frontend
     tty: true
 
