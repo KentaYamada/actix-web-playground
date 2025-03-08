@@ -12,5 +12,10 @@ export default defineConfig({
       reportOnFailure: true,
     },
   },
+  server: {
+    host: true,
+    port: 51204,
+    allowedHosts: ["frontend_test"],
+  },
   plugins: [react(), tsConfigPaths()],
 });

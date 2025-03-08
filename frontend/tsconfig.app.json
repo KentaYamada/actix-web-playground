@@ -26,9 +26,12 @@
     "paths": {
       "@entity": ["./src/entity"],
       "@entity/*": ["./src/entity/*"],
+      "@hooks": ["./src/hooks"],
+      "@hooks/*": ["./src/hooks/*"],
       "@pages": ["./src/pages"],
       "@pages/*": ["./src/pages/*"]
-    }
+    },
+    "types": ["vitest/globals", "vitest/importMeta", "@testing-library/jest-dom"]
   },
   "include": ["src"]
 }

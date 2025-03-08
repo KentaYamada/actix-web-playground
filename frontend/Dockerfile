@@ -7,4 +7,4 @@ WORKDIR /app
 
 COPY ./package.json ./package-lock.json ./
 
-RUN apk update && npm install
+RUN apk update && apk add xdg-utils && npm install
