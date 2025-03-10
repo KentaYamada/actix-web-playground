@@ -67,6 +67,26 @@ services:
     working_dir: /app/frontend
     tty: true
 
+  frontend_test:
+    build:
+      context: ./frontend
+    container_name: frontend_test
+    restart: always
+    networks:
+      - my_network
+    ports:
+      - '51204:51204'
+    volumes:
+      - /app/frontend/node_modules
+      - ./frontend/:/app/frontend
+    command: |
+      npm run test:ui
+    develop:
+      watch:
+        - action: rebuild
+          path: ./frontend/package.json
+    working_dir: /app/frontend
+
   db:
     build:
       context: ./docker/postgres
