@@ -62,3 +62,4 @@ Note: Configure PgAdmin and Postgres access information in the .env file.
 | http://localhost:8080 | main application |
 | http://localhost:8080/api | main app api |
 | http://localhost:5050 | pgAdmin |
+| http://localhost:51204 | vitest |
