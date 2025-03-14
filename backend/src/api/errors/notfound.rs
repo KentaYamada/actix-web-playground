@@ -12,6 +12,7 @@ mod tests {
         http::{header::ContentType, StatusCode},
         test, web, App,
     };
+    use serde_json::Value;
 
     #[actix_web::test]
     async fn test_notfound() {
@@ -23,5 +24,10 @@ mod tests {
         let res = test::call_service(&app, req).await;
 
         assert_eq!(res.status(), StatusCode::NOT_FOUND);
+
+        let body = test::read_body(res).await;
+        let json_body: Value = serde_json::from_slice(&body).unwrap();
+
+        assert_eq!(json_body["message"], "Resource not found");
     }
 }
