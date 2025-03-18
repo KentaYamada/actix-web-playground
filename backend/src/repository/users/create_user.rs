@@ -14,3 +14,18 @@ pub async fn create_user(pool: &PgPool, user: &User) -> Result<i32, Error> {
 
     Ok(id)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::entity::user::User;
+    use sqlx::PgPool;
+
+    #[sqlx::test()]
+    async fn test_create_user_succeeded(pool: PgPool) {
+        let user = User::new(0, "Hoge", "Fuga", "hoge.fuga@email.com", "hogefuga");
+        let id = create_user(&pool, &user).await.expect("Failed create user");
+
+        assert!(id > 0)
+    }
+}
