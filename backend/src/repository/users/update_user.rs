@@ -15,3 +15,30 @@ pub async fn update_user(pool: &PgPool, user: &User) -> Result<i32, Error> {
 
     Ok(id)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::entity::user::User;
+    use sqlx::{query_as, PgPool};
+
+    #[sqlx::test(fixtures("update_user_fixture"))]
+    async fn test_update_user(pool: PgPool) {
+        let user_id: i32 = 1;
+        let user = User::new(user_id, "Hanako", "Foo", "hanaako.foo@email.com", "foobar");
+        let id = update_user(&pool, &user).await.expect("Failed update user");
+
+        assert_eq!(user_id, id);
+
+        let updated_user = query_as::<_, User>("SELECT * FROM users WHERE id = $1")
+            .bind(user_id)
+            .fetch_one(&pool)
+            .await
+            .expect("Failed fetch updated user");
+
+        assert_eq!(user.first_name, updated_user.first_name);
+        assert_eq!(user.family_name, updated_user.family_name);
+        assert_eq!(user.email, updated_user.email);
+        assert_eq!(user.password, updated_user.password);
+    }
+}
