@@ -10,3 +10,24 @@ pub async fn fetch_todos(pool: &PgPool) -> Result<Vec<Todo>, Error> {
 
     Ok(todos)
 }
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+    use sqlx::PgPool;
+
+    #[sqlx::test(fixtures("todos_fixture"))]
+    async fn test_fetch_todos(pool: PgPool) {
+        let todos = fetch_todos(&pool).await.expect("Failed to fetch todos");
+
+        assert_eq!(todos.iter().count(), 3);
+    }
+
+    #[sqlx::test()]
+    async fn test_fetch_no_todo(pool: PgPool) {
+        let todos = fetch_todos(&pool).await.expect("Failed to fetch todos");
+
+        assert_eq!(todos.iter().count(), 0);
+    }
+}
