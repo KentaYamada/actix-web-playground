@@ -4,7 +4,7 @@ mod repository;
 
 use actix_web::{guard, web, App, HttpServer};
 use api::{
-    errors, todos,
+    auths, errors, todos,
     users::{
         create::create, delete::delete, list::list, signin::signin, update::update, view::view,
     },
@@ -31,12 +31,12 @@ async fn main() -> std::io::Result<()> {
             .service(
                 web::scope("/api")
                     .guard(guard::Header("content-type", "application/json"))
+                    .route("/auths/signin", web::post().to(auths::signin_api::signin))
                     .route("/users", web::post().to(create))
                     .route("/users", web::get().to(list))
                     .route("/users/{id}", web::get().to(view))
                     .route("/users/{id}", web::patch().to(update))
                     .route("/users/{id}", web::delete().to(delete))
-                    .route("/users/signin", web::post().to(signin))
                     .route("/todos", web::get().to(todos::list::list))
                     .route("/todos", web::post().to(todos::create::create))
                     .route("/todos/{id}", web::get().to(todos::view::view))
