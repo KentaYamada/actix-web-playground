@@ -5,9 +5,7 @@ mod repository;
 use actix_web::{guard, web, App, HttpServer};
 use api::{
     auths, errors, todos,
-    users::{
-        create::create, delete::delete, list::list, signin::signin, update::update, view::view,
-    },
+    users::{create::create, delete::delete, list::list, update::update, view::view},
 };
 use dotenv::dotenv;
 use entity::app_state::AppState;
