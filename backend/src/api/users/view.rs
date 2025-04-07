@@ -1,27 +1,47 @@
-use crate::entity::{app_state::AppState, response::api_response::ApiResponse, user::User};
-use crate::repository::users::fetch_user_by_id::fetch_user_by_id;
-use actix_web::{web, Responder, Result};
+use crate::{
+    entity::{app_state::AppState, user::User},
+    repository::users::fetch_user_by_id::fetch_user_by_id,
+};
+use actix_web::{
+    body::BoxBody,
+    error::{ErrorInternalServerError, ErrorNotFound},
+    http::header::ContentType,
+    web, HttpResponse, Responder, Result,
+};
 use serde::Serialize;
 
 #[derive(Serialize)]
-pub struct UserViewResponseBody {
-    pub user: Option<User>,
+pub struct UserViewResponse {
+    pub user: User,
+}
+
+impl Responder for UserViewResponse {
+    type Body = BoxBody;
+
+    fn respond_to(self, _req: &actix_web::HttpRequest) -> HttpResponse<Self::Body> {
+        let body = serde_json::to_string(&self).unwrap();
+
+        HttpResponse::Ok()
+            .content_type(ContentType::json())
+            .body(body)
+    }
 }
 
 pub type UserViewRequestPath = web::Path<i32>;
 
-pub async fn view(state: web::Data<AppState>, path: UserViewRequestPath) -> Result<impl Responder> {
-    let user: Option<User> = fetch_user_by_id(&state.db, path.into_inner())
-        .await
-        .expect("Failed fetch user");
-
-    // if user == None {
-    //     Err(HttpResponse::NotFound().json("notfound"));
-    // }
-
-    let response = ApiResponse::new(None, Some(UserViewResponseBody { user }));
-
-    Ok(response.to_json())
+pub async fn view(
+    state: web::Data<AppState>,
+    path: UserViewRequestPath,
+) -> Result<impl Responder, actix_web::Error> {
+    match fetch_user_by_id(&state.db, path.into_inner()).await {
+        Ok(Some(user)) => Ok(UserViewResponse { user }),
+        Ok(None) => Err(ErrorNotFound(
+            serde_json::json!({ "message": "User not found." }),
+        )),
+        Err(_) => Err(ErrorInternalServerError(
+            serde_json::json!({ "message": "InternalServerError"}),
+        )),
+    }
 }
 
 #[cfg(test)]
