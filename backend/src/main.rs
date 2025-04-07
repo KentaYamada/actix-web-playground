@@ -4,7 +4,7 @@ mod repository;
 
 use actix_web::{guard, web, App, HttpServer};
 use api::{
-    auths, errors, todos,
+    auths, todos,
     users::{create::create, delete::delete, list::list, update::update, view::view},
 };
 use dotenv::dotenv;
@@ -41,7 +41,6 @@ async fn main() -> std::io::Result<()> {
                     .route("/todos/{id}", web::patch().to(todos::update::update))
                     .route("/todos/{id}", web::delete().to(todos::delete::delete)),
             )
-            .default_service(web::to(errors::notfound::notfound))
     })
     .bind(("0.0.0.0", 3000))?
     .run()
