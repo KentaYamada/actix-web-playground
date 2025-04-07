@@ -1,6 +1,11 @@
-use crate::entity::{app_state::AppState, response::api_response::ApiResponse, user::User};
-use crate::repository::users::update_user::update_user;
-use actix_web::{web, Responder, Result};
+use crate::{
+    entity::{app_state::AppState, user::User},
+    repository::users::update_user::update_user,
+};
+use actix_web::{
+    body::BoxBody, error::ErrorInternalServerError, http::header::ContentType, web, HttpResponse,
+    Responder, Result,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -12,8 +17,21 @@ pub struct UpdateUserRequestBody {
 }
 
 #[derive(Debug, Serialize)]
-pub struct UpdateUserResponseBody {
+pub struct UpdateUserResponse {
     pub id: i32,
+    pub mesage: &'static str,
+}
+
+impl Responder for UpdateUserResponse {
+    type Body = BoxBody;
+
+    fn respond_to(self, _req: &actix_web::HttpRequest) -> actix_web::HttpResponse<Self::Body> {
+        let body = serde_json::to_string(&self).unwrap();
+
+        HttpResponse::Ok()
+            .content_type(ContentType::json())
+            .body(body)
+    }
 }
 
 pub type UpdateUserPath = web::Path<i32>;
@@ -24,7 +42,7 @@ pub async fn update(
     state: web::Data<AppState>,
     path: UpdateUserPath,
     payload: UpdateUserRequest,
-) -> Result<impl Responder> {
+) -> Result<impl Responder, actix_web::Error> {
     let user = User::new(
         path.into_inner(),
         &payload.first_name,
@@ -33,12 +51,11 @@ pub async fn update(
         &payload.password,
     );
 
-    let id = update_user(&state.db, &user).await.unwrap();
-
-    let response = ApiResponse::new(
-        Some("Update successfully".to_string()),
-        Some(UpdateUserResponseBody { id }),
-    );
-
-    Ok(response.to_json())
+    match update_user(&state.db, &user).await {
+        Ok(id) => Ok(UpdateUserResponse {
+            mesage: "Update successfully",
+            id,
+        }),
+        Err(_) => Err(ErrorInternalServerError("InternalServerError")),
+    }
 }
