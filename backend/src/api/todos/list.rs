@@ -25,6 +25,48 @@ impl Responder for TodoListResponse {
     }
 }
 
+/// Search todos API handler
+///
+/// # Endpoint
+/// `GET /api/todos`
+///
+/// # (WIP)Request
+/// ```json
+/// {
+/// }
+/// ```
+///
+/// # Response
+/// ```json
+/// {
+///    "todos": [
+///      {
+///         "id": 1,
+///         "status": 0,
+///         "title": "todo a",
+///         "detail": "todo a desctiption"
+///      },
+///      {
+///         "id": 2,
+///         "status": 1,
+///         "title": "todo b",
+///         "detail": "todo b desctiption"
+///      }
+///    ],
+/// }
+/// ```
+///
+/// # Error Response
+/// ```json
+/// {
+///    "message": "InternalServerError"
+/// }
+/// ```
+///
+/// # How to run (curl, jq)
+/// ```bash
+/// curl -s -v -X GET http://localhost:8080/api/todos -H "content-type: application/json" | jq
+/// ```
 pub async fn list(state: web::Data<AppState>) -> Result<impl Responder, actix_web::Error> {
     match fetch_todos(&state.db).await {
         Ok(todos) => Ok(TodoListResponse { todos }),

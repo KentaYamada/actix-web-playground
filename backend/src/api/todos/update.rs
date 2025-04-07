@@ -37,11 +37,51 @@ pub type UpdateTodoPath = web::Path<i32>;
 
 pub type UpdateTodoRequest = web::Json<UpdateTodoRequestBody>;
 
+/// Update todo API handler
+///
+/// # Endpoint
+/// `PUT /api/todos/{id}`
+///
+/// # Parameters
+/// - `id`: todo id
+///
+/// # Request
+/// Content-Type: application/json
+///
+/// ```json
+/// {
+///    "status": 0,
+///    "title": "todo title"
+///    "detail": "description todo"
+/// }
+/// ```
+///
+/// # Response
+/// ```json
+/// {
+///    "message": "Create successfully",
+///    "id": 1
+/// }
+/// ```
+///
+/// # Error Response
+/// ```json
+/// {
+///    "message": "InternalServerError"
+/// }
+/// ```
+/// # How to run (curl, jq)
+/// ```bash
+/// curl -s -v -X PUT http://localhost:8080/api/todos/1 \
+///      -H "content-type: application/json" \
+///      -d '{ "status": 0, "title": "todo title", "detail": "description todo" }' \
+///      | jq
+/// ```
 pub async fn update(
     state: web::Data<AppState>,
     path: UpdateTodoPath,
     payload: UpdateTodoRequest,
-) -> Result<impl Responder> {
+) -> Result<impl Responder, actix_web::Error> {
     let todo = Todo::new(
         path.into_inner(),
         payload.status,

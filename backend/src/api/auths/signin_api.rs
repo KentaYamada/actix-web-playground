@@ -13,6 +13,44 @@ pub struct SigninRequestBody {
 pub type SigninRequest = web::Json<SigninRequestBody>;
 
 /// Sign with password API handler
+///
+/// # Endpoint
+/// `POST /api/auths/signin`
+///
+/// # Request
+/// Content-Type: application/json
+///
+/// ```json
+/// {
+///    "email": "foo@email.com",
+///    "password": "foobar"
+/// }
+/// ```
+///
+/// # Response
+/// ```json
+/// {
+///    "id": 1,
+///    "family_name": "Foo",
+///    "first_name": "Taro",
+///    "email": "foo@email.com",
+///    "password": "foobar"
+/// }
+/// ```
+///
+/// # Error Response
+/// ```json
+/// {
+///    "message": "Invalid email or password"
+/// }
+/// ```
+/// # How to run (curl, jq)
+/// ```bash
+/// curl -s -v -X POST http://localhost:8080/api/auths/signin \
+///      -H "content-type: application/json" \
+///      -d '{ "email": "foo@email.com", "password": "foobar" }' \
+///      | jq
+/// ```
 pub async fn signin(
     state: web::Data<AppState>,
     payload: SigninRequest,

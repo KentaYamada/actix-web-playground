@@ -29,11 +29,52 @@ impl Responder for TodoViewResponse {
 
 pub type TodoViewRequestPath = web::Path<i32>;
 
-pub async fn view(state: web::Data<AppState>, path: TodoViewRequestPath) -> Result<impl Responder> {
+/// Get todo API handler
+///
+/// # Endpoint
+/// `GET /api/todos/{id}`
+///
+/// # Parameters
+/// - `id`: todo id
+///
+/// # Response
+/// ```json
+/// {
+///   "todo": {
+///     "id": 1,
+///     "status": 0,
+///     "title": "todo a",
+///     "detail": "todo a desctiption"
+///   }
+/// }
+/// ```
+///
+/// # Error Response
+/// ## 404
+/// ```json
+/// {
+///    "message": "Todo is not found"
+/// }
+/// ```
+/// ## 500
+/// ```json
+/// {
+///    "message": "InternalServerError"
+/// }
+/// ```
+///
+/// # How to run (curl, jq)
+/// ```bash
+/// curl -s -v -X GET http://localhost:8080/api/todos/1 -H "content-type: application/json" | jq
+/// ```
+pub async fn view(
+    state: web::Data<AppState>,
+    path: TodoViewRequestPath,
+) -> Result<impl Responder, actix_web::Error> {
     match fetch_todo_by_id(&state.db, path.into_inner()).await {
         Ok(Some(todo)) => Ok(TodoViewResponse { todo }),
         Ok(None) => Err(ErrorNotFound(
-            serde_json::json!({ "message": "User not found." }),
+            serde_json::json!({ "message": "Todo is not found" }),
         )),
         Err(_) => Err(ErrorInternalServerError(
             serde_json::json!({ "message": "InternalServerError"}),

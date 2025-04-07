@@ -24,6 +24,32 @@ impl Responder for DeleteTodoResponse {
 
 pub type DeleteTodoPath = web::Path<i32>;
 
+/// Delete todo API handler
+///
+/// # Endpoint
+/// `DELETE /api/todos/{id}`
+///
+/// # Parameters
+/// - `id`: todo id
+///
+/// # Response
+/// ```json
+/// {
+///    "message": "Deleted successfully",
+/// }
+/// ```
+///
+/// # Error Response
+/// ```json
+/// {
+///    "message": "InternalServerError"
+/// }
+/// ```
+///
+/// # How to run (curl, jq)
+/// ```bash
+/// curl -s -v -X DELETE http://localhost:8080/api/todos/1 -H "content-type: application/json" | jq
+/// ```
 pub async fn delete(
     state: web::Data<AppState>,
     path: DeleteTodoPath,

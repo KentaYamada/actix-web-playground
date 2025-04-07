@@ -35,10 +35,47 @@ impl Responder for CreateTodoResponse {
 
 pub type CreateTodoRequest = web::Json<CreateTodoRequestBody>;
 
+/// Create todo API handler
+///
+/// # Endpoint
+/// `POST /api/todos`
+///
+/// # Request
+/// Content-Type: application/json
+///
+/// ```json
+/// {
+///    "status": 0,
+///    "title": "todo title"
+///    "detail": "description todo"
+/// }
+/// ```
+///
+/// # Response
+/// ```json
+/// {
+///    "message": "Create successfully",
+///    "id": 1
+/// }
+/// ```
+///
+/// # Error Response
+/// ```json
+/// {
+///    "message": "InternalServerError"
+/// }
+/// ```
+/// # How to run (curl, jq)
+/// ```bash
+/// curl -s -v -X POST http://localhost:8080/api/todos \
+///      -H "content-type: application/json" \
+///      -d '{ "status": 0, "title": "todo title", "detail": "description todo" }' \
+///      | jq
+/// ```
 pub async fn create(
     state: web::Data<AppState>,
     payload: CreateTodoRequest,
-) -> Result<impl Responder> {
+) -> Result<impl Responder, actix_web::Error> {
     let todo = Todo::new(0, payload.status, &payload.title, &payload.detail);
 
     match create_todo(&state.db, &todo).await {
