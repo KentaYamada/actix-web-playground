@@ -1,7 +1,7 @@
-use crate::entity::todo::Todo;
-use sqlx::{Error, PgPool};
+use crate::entity::{sqlx_result::SqlxResult, todo::Todo};
+use sqlx::PgPool;
 
-pub async fn fetch_todo_by_id(pool: &PgPool, id: i32) -> Result<Option<Todo>, Error> {
+pub async fn fetch_todo_by_id(pool: &PgPool, id: i32) -> SqlxResult<Option<Todo>> {
     let todo =
         sqlx::query_as::<_, Todo>("SELECT id, status, title, detail FROM todos WHERE id = $1")
             .bind(id)

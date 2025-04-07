@@ -1,7 +1,8 @@
-use sqlx::{Error, PgPool};
+use crate::entity::sqlx_result::SqlxResult;
+use sqlx::PgPool;
 
 /// ユーザー削除
-pub async fn delete_user(pool: &PgPool, id: i32) -> Result<(), Error> {
+pub async fn delete_user(pool: &PgPool, id: i32) -> SqlxResult<()> {
     sqlx::query("DELETE FROM users WHERE id = $1")
         .bind(id)
         .execute(pool)

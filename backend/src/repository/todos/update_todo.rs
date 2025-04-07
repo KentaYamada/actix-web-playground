@@ -1,8 +1,8 @@
-use crate::entity::todo::Todo;
+use crate::entity::{sqlx_result::SqlxResult, todo::Todo};
 use chrono::{DateTime, Local};
-use sqlx::{Error, PgPool};
+use sqlx::PgPool;
 
-pub async fn update_todo(pool: &PgPool, todo: &Todo) -> Result<i32, Error> {
+pub async fn update_todo(pool: &PgPool, todo: &Todo) -> SqlxResult<i32> {
     let now: DateTime<Local> = Local::now();
     let row = sqlx::query_as::<_, (i32,)>("UPDATE todos SET status = $1, title = $2, detail = $3, modified_at = $4 WHERE id = $5 RETURNING id")
                 .bind(todo.status)

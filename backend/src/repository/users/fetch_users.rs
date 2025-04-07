@@ -1,7 +1,7 @@
-use crate::entity::user::User;
-use sqlx::{Error, PgPool};
+use crate::entity::{sqlx_result::SqlxResult, user::User};
+use sqlx::PgPool;
 
-pub async fn fetch_users(pool: &PgPool) -> Result<Vec<User>, Error> {
+pub async fn fetch_users(pool: &PgPool) -> SqlxResult<Vec<User>> {
     let users = sqlx::query_as::<_, User>("SELECT * FROM users LIMIT 100")
         .fetch_all(pool)
         .await?;

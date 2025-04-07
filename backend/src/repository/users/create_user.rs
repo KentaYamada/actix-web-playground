@@ -1,8 +1,8 @@
-use crate::entity::user::User;
-use sqlx::{Error, PgPool};
+use crate::entity::{sqlx_result::SqlxResult, user::User};
+use sqlx::PgPool;
 
 /// ユーザー新規作成
-pub async fn create_user(pool: &PgPool, user: &User) -> Result<i32, Error> {
+pub async fn create_user(pool: &PgPool, user: &User) -> SqlxResult<i32> {
     let row = sqlx::query_as::<_, (i32,)>("INSERT INTO users (first_name, family_name, email, password) VALUES ($1, $2, $3, $4) RETURNING id")
         .bind(&user.first_name)
         .bind(&user.family_name)

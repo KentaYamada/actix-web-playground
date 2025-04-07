@@ -1,11 +1,11 @@
-use crate::entity::user::User;
+use crate::entity::{sqlx_result::SqlxResult, user::User};
 use sqlx::PgPool;
 
 pub async fn fetch_user_by_password(
     pool: &PgPool,
     email: &str,
     password: &str,
-) -> Result<Option<User>, sqlx::Error> {
+) -> SqlxResult<Option<User>> {
     let user = sqlx::query_as("SELECT * FROM users WHERE email = $1 AND password = $2")
         .bind(email)
         .bind(password)

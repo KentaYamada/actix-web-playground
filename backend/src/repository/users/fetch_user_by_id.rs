@@ -1,7 +1,7 @@
-use crate::entity::user::User;
-use sqlx::{Error, PgPool};
+use crate::entity::{sqlx_result::SqlxResult, user::User};
+use sqlx::PgPool;
 
-pub async fn fetch_user_by_id(pool: &PgPool, id: i32) -> Result<Option<User>, Error> {
+pub async fn fetch_user_by_id(pool: &PgPool, id: i32) -> SqlxResult<Option<User>> {
     let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = $1")
         .bind(id)
         .fetch_optional(pool)
