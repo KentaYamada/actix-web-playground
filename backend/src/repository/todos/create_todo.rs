@@ -18,3 +18,19 @@ pub async fn create_todo(pool: &PgPool, todo: &Todo) -> SqlxResult<i32> {
 
     Ok(id)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::entity::todo::Todo;
+    use sqlx::PgPool;
+
+    #[sqlx::test()]
+    async fn test_create_todo_succeeded(pool: PgPool) {
+        let todo = Todo::new(0, 0, "test title", "this is test");
+        let id = create_todo(&pool, &todo)
+            .await
+            .expect("Failed to create todo");
+        assert!(id > 0);
+    }
+}
