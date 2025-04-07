@@ -1,6 +1,9 @@
-use crate::entity::{app_state::AppState, response::api_response::ApiResponse, user::User};
+use crate::entity::{app_state::AppState, user::User};
 use crate::repository::users::create_user::create_user;
-use actix_web::{web, Responder, Result};
+use actix_web::{
+    body::BoxBody, error::ErrorInternalServerError, http::header::ContentType, web, HttpResponse,
+    Responder, Result,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -16,12 +19,30 @@ pub struct CreateUserResponseBody {
     pub id: i32,
 }
 
+#[derive(Debug, Serialize)]
+pub struct CreateUserResponse {
+    pub message: &'static str,
+    pub id: i32,
+}
+
+impl Responder for CreateUserResponse {
+    type Body = BoxBody;
+
+    fn respond_to(self, _req: &actix_web::HttpRequest) -> actix_web::HttpResponse<Self::Body> {
+        let body = serde_json::to_string(&self).unwrap();
+
+        HttpResponse::Ok()
+            .content_type(ContentType::json())
+            .body(body)
+    }
+}
+
 pub type CreateUserRequest = web::Json<CreateUserRequestBody>;
 
 pub async fn create(
     state: web::Data<AppState>,
     payload: CreateUserRequest,
-) -> Result<impl Responder> {
+) -> Result<impl Responder, actix_web::Error> {
     let user = User::new(
         0,
         &payload.first_name,
@@ -30,12 +51,11 @@ pub async fn create(
         &payload.password,
     );
 
-    let id = create_user(&state.db, &user).await.unwrap();
-
-    let response = ApiResponse::new(
-        Some("Create successfully".to_string()),
-        Some(CreateUserResponseBody { id }),
-    );
-
-    Ok(response.to_json())
+    match create_user(&state.db, &user).await {
+        Ok(id) => Ok(CreateUserResponse {
+            message: "Create successfully",
+            id,
+        }),
+        Err(_) => Err(ErrorInternalServerError("InternalServerError")),
+    }
 }
