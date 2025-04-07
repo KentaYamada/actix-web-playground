@@ -25,7 +25,10 @@ impl Responder for DeleteUserResponse {
 
 pub type DeleteUserPath = web::Path<i32>;
 
-pub async fn delete(state: web::Data<AppState>, path: DeleteUserPath) -> Result<impl Responder> {
+pub async fn delete(
+    state: web::Data<AppState>,
+    path: DeleteUserPath,
+) -> Result<impl Responder, actix_web::Error> {
     match delete_user(&state.db, path.into_inner()).await {
         Ok(_) => Ok(DeleteUserResponse {
             message: "Deleted successfuly",
