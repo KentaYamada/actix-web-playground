@@ -1,6 +1,11 @@
-use crate::entity::{app_state::AppState, response::api_response::ApiResponse, todo::Todo};
-use crate::repository::todos::update_todo::update_todo;
-use actix_web::{web, Responder, Result};
+use crate::{
+    entity::{app_state::AppState, todo::Todo},
+    repository::todos::update_todo::update_todo,
+};
+use actix_web::{
+    body::BoxBody, error::ErrorInternalServerError, http::header::ContentType, web, HttpResponse,
+    Responder, Result,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -11,8 +16,21 @@ pub struct UpdateTodoRequestBody {
 }
 
 #[derive(Debug, Serialize)]
-pub struct UpdateTodoResponseBody {
+pub struct UpdateTodoResponse {
+    pub message: &'static str,
     pub id: i32,
+}
+
+impl Responder for UpdateTodoResponse {
+    type Body = BoxBody;
+
+    fn respond_to(self, _req: &actix_web::HttpRequest) -> actix_web::HttpResponse<Self::Body> {
+        let body = serde_json::to_string(&self).unwrap();
+
+        HttpResponse::Ok()
+            .content_type(ContentType::json())
+            .body(body)
+    }
 }
 
 pub type UpdateTodoPath = web::Path<i32>;
@@ -30,12 +48,12 @@ pub async fn update(
         &payload.title,
         &payload.detail,
     );
-    let id = update_todo(&state.db, &todo).await.unwrap();
 
-    let response = ApiResponse::new(
-        Some("Update successfully".to_string()),
-        Some(UpdateTodoResponseBody { id }),
-    );
-
-    Ok(response.to_json())
+    match update_todo(&state.db, &todo).await {
+        Ok(id) => Ok(UpdateTodoResponse {
+            message: "Update successfully",
+            id,
+        }),
+        Err(_) => Err(ErrorInternalServerError("InternalServerError")),
+    }
 }
