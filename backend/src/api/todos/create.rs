@@ -1,6 +1,11 @@
-use crate::entity::{app_state::AppState, response::api_response::ApiResponse, todo::Todo};
-use crate::repository::todos::create_todo::create_todo;
-use actix_web::{web, Responder, Result};
+use crate::{
+    entity::{app_state::AppState, todo::Todo},
+    repository::todos::create_todo::create_todo,
+};
+use actix_web::{
+    body::BoxBody, error::ErrorInternalServerError, http::header::ContentType, web, HttpResponse,
+    Responder, Result,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -11,8 +16,21 @@ pub struct CreateTodoRequestBody {
 }
 
 #[derive(Debug, Serialize)]
-pub struct CreateTodoResponseBody {
+pub struct CreateTodoResponse {
+    pub message: &'static str,
     pub id: i32,
+}
+
+impl Responder for CreateTodoResponse {
+    type Body = BoxBody;
+
+    fn respond_to(self, _req: &actix_web::HttpRequest) -> actix_web::HttpResponse<Self::Body> {
+        let body = serde_json::to_string(&self).unwrap();
+
+        HttpResponse::Ok()
+            .content_type(ContentType::json())
+            .body(body)
+    }
 }
 
 pub type CreateTodoRequest = web::Json<CreateTodoRequestBody>;
@@ -23,12 +41,11 @@ pub async fn create(
 ) -> Result<impl Responder> {
     let todo = Todo::new(0, payload.status, &payload.title, &payload.detail);
 
-    let id = create_todo(&state.db, &todo).await.unwrap();
-
-    let response = ApiResponse::new(
-        Some("Create successfully".to_string()),
-        Some(CreateTodoResponseBody { id }),
-    );
-
-    Ok(response.to_json())
+    match create_todo(&state.db, &todo).await {
+        Ok(id) => Ok(CreateTodoResponse {
+            message: "Create successfully",
+            id,
+        }),
+        Err(_) => Err(ErrorInternalServerError("InternalServerError")),
+    }
 }
