@@ -56,6 +56,7 @@ pub type TodoViewRequestPath = web::Path<i32>;
 ///    "message": "Todo is not found"
 /// }
 /// ```
+///
 /// ## 500
 /// ```json
 /// {

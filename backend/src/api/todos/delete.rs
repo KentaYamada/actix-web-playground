@@ -16,7 +16,7 @@ impl Responder for DeleteTodoResponse {
     fn respond_to(self, _req: &actix_web::HttpRequest) -> actix_web::HttpResponse<Self::Body> {
         let body = serde_json::to_string(&self).unwrap();
 
-        HttpResponse::Ok()
+        HttpResponse::NoContent()
             .content_type(ContentType::json())
             .body(body)
     }
@@ -33,6 +33,7 @@ pub type DeleteTodoPath = web::Path<i32>;
 /// - `id`: todo id
 ///
 /// # Response
+/// ## 204
 /// ```json
 /// {
 ///    "message": "Deleted successfully",
@@ -40,6 +41,7 @@ pub type DeleteTodoPath = web::Path<i32>;
 /// ```
 ///
 /// # Error Response
+/// ## 500
 /// ```json
 /// {
 ///    "message": "InternalServerError"
