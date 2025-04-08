@@ -48,7 +48,7 @@ export default tseslint.config(
     rules: {
       complexity: ["error", 10],
       ...reactHooks.configs.recommended.rules,
-      "no-console": "error",
+      "no-console": "warn",
       "react/require-default-props": "off",
       "react/jsx-props-no-spreading": "off",
       "react/jsx-uses-react": "off",

@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { MantineProvider } from "@mantine/core";
 import {
   TodoCreatePage,
+  TodoEditPage,
   TodoListPage,
   UserViewPage,
   SigninPage,
@@ -20,6 +21,7 @@ export default function App() {
             <Route path="/auth/signup" element={<SignupPage />} />
             <Route path="/todos" element={<TodoListPage />} />
             <Route path="/todos/create" element={<TodoCreatePage />} />
+            <Route path="/todos/:id/edit" element={<TodoEditPage />} />
             <Route path="/users/:id" element={<UserViewPage />} />
           </Routes>
         </BrowserRouter>
