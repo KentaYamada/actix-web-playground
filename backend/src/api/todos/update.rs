@@ -57,6 +57,7 @@ pub type UpdateTodoRequest = web::Json<UpdateTodoRequestBody>;
 /// ```
 ///
 /// # Response
+/// HTTP status: 200
 /// ```json
 /// {
 ///    "message": "Create successfully",
@@ -65,6 +66,7 @@ pub type UpdateTodoRequest = web::Json<UpdateTodoRequestBody>;
 /// ```
 ///
 /// # Error Response
+/// HTTP status: 500
 /// ```json
 /// {
 ///    "message": "InternalServerError"

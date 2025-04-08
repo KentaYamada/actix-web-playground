@@ -29,6 +29,46 @@ impl Responder for UserViewResponse {
 
 pub type UserViewRequestPath = web::Path<i32>;
 
+/// Get user API handler
+///
+/// # Endpoint
+/// `GET /api/users/{id}`
+///
+/// # Parameters
+/// - `id`: user id
+///
+/// # Response
+/// ```json
+/// {
+///   "user": {
+///     "id": 1,
+///     "first_name": "Foo",
+///     "family_name": "Bar",
+///     "email": "foo@email.com",
+///     "password": "foobar"
+///   }
+/// }
+/// ```
+///
+/// # Error Response
+/// HTTP status: 404
+/// ```json
+/// {
+///    "message": "user is not found"
+/// }
+/// ```
+///
+/// HTTP status: 500
+/// ```json
+/// {
+///    "message": "InternalServerError"
+/// }
+/// ```
+///
+/// # How to run (curl, jq)
+/// ```bash
+/// curl -s -v -X GET http://localhost:8080/api/users/1 -H "content-type: application/json" | jq
+/// ```
 pub async fn view(
     state: web::Data<AppState>,
     path: UserViewRequestPath,

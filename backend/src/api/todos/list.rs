@@ -37,6 +37,7 @@ impl Responder for TodoListResponse {
 /// ```
 ///
 /// # Response
+/// HTTP status: 200
 /// ```json
 /// {
 ///    "todos": [
@@ -57,6 +58,7 @@ impl Responder for TodoListResponse {
 /// ```
 ///
 /// # Error Response
+/// HTTP status: 500
 /// ```json
 /// {
 ///    "message": "InternalServerError"

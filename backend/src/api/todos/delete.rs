@@ -33,7 +33,7 @@ pub type DeleteTodoPath = web::Path<i32>;
 /// - `id`: todo id
 ///
 /// # Response
-/// ## 204
+/// HTTP status: 204
 /// ```json
 /// {
 ///    "message": "Deleted successfully",
@@ -41,7 +41,7 @@ pub type DeleteTodoPath = web::Path<i32>;
 /// ```
 ///
 /// # Error Response
-/// ## 500
+/// HTTP status: 500
 /// ```json
 /// {
 ///    "message": "InternalServerError"

@@ -15,11 +15,6 @@ pub struct CreateUserRequestBody {
 }
 
 #[derive(Debug, Serialize)]
-pub struct CreateUserResponseBody {
-    pub id: i32,
-}
-
-#[derive(Debug, Serialize)]
 pub struct CreateUserResponse {
     pub message: &'static str,
     pub id: i32,
@@ -39,6 +34,46 @@ impl Responder for CreateUserResponse {
 
 pub type CreateUserRequest = web::Json<CreateUserRequestBody>;
 
+/// Create user API handler
+///
+/// # Endpoint
+/// `POST /api/users`
+///
+/// # Request
+/// Content-Type: application/json
+///
+/// ```json
+/// {
+///    "first_name": "Foo",
+///    "family_name": "Bar"
+///    "email": "foo@email.com"
+///    "password": "foobar"
+/// }
+/// ```
+///
+/// # Response
+/// HTTP status: 200
+/// ```json
+/// {
+///    "message": "Create successfully",
+///    "id": 1
+/// }
+/// ```
+///
+/// # Error Response
+/// HTTP status: 500
+/// ```json
+/// {
+///    "message": "InternalServerError"
+/// }
+/// ```
+/// # How to run (curl, jq)
+/// ```bash
+/// curl -s -v -X POST http://localhost:8080/api/users \
+///      -H "content-type: application/json" \
+///      -d '{ "first_name": "Foo", "family_name": "Bar", "email": "foo@email.com", "password": "foobar" }' \
+///      | jq
+/// ```
 pub async fn create(
     state: web::Data<AppState>,
     payload: CreateUserRequest,

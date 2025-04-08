@@ -50,14 +50,14 @@ pub type TodoViewRequestPath = web::Path<i32>;
 /// ```
 ///
 /// # Error Response
-/// ## 404
+/// HTTP status: 404
 /// ```json
 /// {
 ///    "message": "Todo is not found"
 /// }
 /// ```
 ///
-/// ## 500
+/// HTTP status: 500
 /// ```json
 /// {
 ///    "message": "InternalServerError"

@@ -38,6 +38,48 @@ pub type UpdateUserPath = web::Path<i32>;
 
 pub type UpdateUserRequest = web::Json<UpdateUserRequestBody>;
 
+/// Update user\ API handler
+///
+/// # Endpoint
+/// `PUT /api/user\s/{id}`
+///
+/// # Parameters
+/// - `id`: user id
+///
+/// # Request
+/// Content-Type: application/json
+///
+/// ```json
+/// {
+///    "status": 0,
+///    "title": "user title"
+///    "detail": "description user"
+/// }
+/// ```
+///
+/// # Response
+/// HTTP status: 200
+/// ```json
+/// {
+///    "message": "Create successfully",
+///    "id": 1
+/// }
+/// ```
+///
+/// # Error Response
+/// HTTP status: 500
+/// ```json
+/// {
+///    "message": "InternalServerError"
+/// }
+/// ```
+/// # How to run (curl, jq)
+/// ```bash
+/// curl -s -v -X PUT http://localhost:8080/api/users/1 \
+///      -H "content-type: application/json" \
+///      -d '{ "first_name": "Foo", "family_name": "Bar", "email": "foo@email.com", "password": "foobar" }' \
+///      | jq
+/// ```
 pub async fn update(
     state: web::Data<AppState>,
     path: UpdateUserPath,
