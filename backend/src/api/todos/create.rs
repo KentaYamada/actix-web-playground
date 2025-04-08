@@ -75,7 +75,7 @@ pub type CreateTodoRequest = web::Json<CreateTodoRequestBody>;
 ///      | jq
 /// ```
 pub async fn create(
-    state: web::Data<AppState>,
+    state: AppState,
     payload: CreateTodoRequest,
 ) -> Result<impl Responder, actix_web::Error> {
     let todo = Todo::new(0, payload.status, &payload.title, &payload.detail);

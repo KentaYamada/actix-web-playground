@@ -75,7 +75,7 @@ pub type CreateUserRequest = web::Json<CreateUserRequestBody>;
 ///      | jq
 /// ```
 pub async fn create(
-    state: web::Data<AppState>,
+    state: AppState,
     payload: CreateUserRequest,
 ) -> Result<impl Responder, actix_web::Error> {
     let user = User::new(

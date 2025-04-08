@@ -8,7 +8,7 @@ use api::{
     users::{create::create, delete::delete, list::list, update::update, view::view},
 };
 use dotenv::dotenv;
-use entity::app_state::AppState;
+use entity::app_state::AppData;
 use sqlx::postgres::PgPoolOptions;
 use std::env;
 
@@ -25,7 +25,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
-            .app_data(web::Data::new(AppState { db: pool.clone() }))
+            .app_data(web::Data::new(AppData { db: pool.clone() }))
             .service(
                 web::scope("/api")
                     .guard(guard::Header("content-type", "application/json"))

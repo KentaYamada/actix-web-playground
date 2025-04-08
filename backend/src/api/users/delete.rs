@@ -53,7 +53,7 @@ pub type DeleteUserPath = web::Path<i32>;
 /// curl -s -v -X DELETE http://localhost:8080/api/users/1 -H "content-type: application/json" | jq
 /// ```
 pub async fn delete(
-    state: web::Data<AppState>,
+    state: AppState,
     path: DeleteUserPath,
 ) -> Result<impl Responder, actix_web::Error> {
     match delete_user(&state.db, path.into_inner()).await {

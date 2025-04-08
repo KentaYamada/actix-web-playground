@@ -53,7 +53,7 @@ pub type DeleteTodoPath = web::Path<i32>;
 /// curl -s -v -X DELETE http://localhost:8080/api/todos/1 -H "content-type: application/json" | jq
 /// ```
 pub async fn delete(
-    state: web::Data<AppState>,
+    state: AppState,
     path: DeleteTodoPath,
 ) -> Result<impl Responder, actix_web::Error> {
     match delete_todo(&state.db, path.into_inner()).await {

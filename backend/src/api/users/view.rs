@@ -70,7 +70,7 @@ pub type UserViewRequestPath = web::Path<i32>;
 /// curl -s -v -X GET http://localhost:8080/api/users/1 -H "content-type: application/json" | jq
 /// ```
 pub async fn view(
-    state: web::Data<AppState>,
+    state: AppState,
     path: UserViewRequestPath,
 ) -> Result<impl Responder, actix_web::Error> {
     match fetch_user_by_id(&state.db, path.into_inner()).await {

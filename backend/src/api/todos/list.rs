@@ -3,7 +3,7 @@ use crate::{
     repository::todos::fetch_todos::fetch_todos,
 };
 use actix_web::{
-    body::BoxBody, error::ErrorInternalServerError, http::header::ContentType, web, HttpResponse,
+    body::BoxBody, error::ErrorInternalServerError, http::header::ContentType, HttpResponse,
     Responder, Result,
 };
 use serde::Serialize;
@@ -69,7 +69,7 @@ impl Responder for TodoListResponse {
 /// ```bash
 /// curl -s -v -X GET http://localhost:8080/api/todos -H "content-type: application/json" | jq
 /// ```
-pub async fn list(state: web::Data<AppState>) -> Result<impl Responder, actix_web::Error> {
+pub async fn list(state: AppState) -> Result<impl Responder, actix_web::Error> {
     match fetch_todos(&state.db).await {
         Ok(todos) => Ok(TodoListResponse { todos }),
         Err(_) => Err(ErrorInternalServerError(

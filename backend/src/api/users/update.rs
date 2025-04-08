@@ -81,7 +81,7 @@ pub type UpdateUserRequest = web::Json<UpdateUserRequestBody>;
 ///      | jq
 /// ```
 pub async fn update(
-    state: web::Data<AppState>,
+    state: AppState,
     path: UpdateUserPath,
     payload: UpdateUserRequest,
 ) -> Result<impl Responder, actix_web::Error> {

@@ -80,7 +80,7 @@ pub type UpdateTodoRequest = web::Json<UpdateTodoRequestBody>;
 ///      | jq
 /// ```
 pub async fn update(
-    state: web::Data<AppState>,
+    state: AppState,
     path: UpdateTodoPath,
     payload: UpdateTodoRequest,
 ) -> Result<impl Responder, actix_web::Error> {

@@ -52,7 +52,7 @@ pub type SigninRequest = web::Json<SigninRequestBody>;
 ///      | jq
 /// ```
 pub async fn signin(
-    state: web::Data<AppState>,
+    state: AppState,
     payload: SigninRequest,
 ) -> Result<impl Responder, actix_web::Error> {
     match fetch_user_by_password(&state.db, &payload.email, &payload.password).await {

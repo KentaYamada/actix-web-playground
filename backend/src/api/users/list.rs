@@ -1,7 +1,7 @@
 use crate::entity::{app_state::AppState, user::User};
 use crate::repository::users::fetch_users::fetch_users;
 use actix_web::{
-    body::BoxBody, error::ErrorInternalServerError, http::header::ContentType, web, HttpResponse,
+    body::BoxBody, error::ErrorInternalServerError, http::header::ContentType, HttpResponse,
     Responder, Result,
 };
 use serde::Serialize;
@@ -73,7 +73,7 @@ pub struct UserListResponseBody {
 /// ```bash
 /// curl -s -v -X GET http://localhost:8080/api/users -H "content-type: application/json" | jq
 /// ```
-pub async fn list(state: web::Data<AppState>) -> Result<impl Responder, actix_web::Error> {
+pub async fn list(state: AppState) -> Result<impl Responder, actix_web::Error> {
     match fetch_users(&state.db).await {
         Ok(users) => Ok(UserListResponse { users }),
         Err(_) => Err(ErrorInternalServerError(

@@ -69,7 +69,7 @@ pub type TodoViewRequestPath = web::Path<i32>;
 /// curl -s -v -X GET http://localhost:8080/api/todos/1 -H "content-type: application/json" | jq
 /// ```
 pub async fn view(
-    state: web::Data<AppState>,
+    state: AppState,
     path: TodoViewRequestPath,
 ) -> Result<impl Responder, actix_web::Error> {
     match fetch_todo_by_id(&state.db, path.into_inner()).await {
