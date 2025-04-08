@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Alert } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
-import { StatusFilter, TodoListItem } from "@components";
+import { DefaultLayout, StatusFilter, TodoListItem } from "@components";
 import { Todo } from "@entity";
 
 export function TodoListPage() {
@@ -30,16 +30,16 @@ export function TodoListPage() {
   //   },
   // ]);
 
-  useEffect(function () {
+  useEffect(() => {
     axios
       .get("/api/todos", {
         headers: { "Content-Type": "application/json" },
         data: {},
       })
-      .then(function (res) {
+      .then((res) => {
         setTodos(res.data.todos);
       })
-      .catch(function (err) {
+      .catch((err) => {
         console.error(err);
       });
   }, []);
@@ -52,7 +52,7 @@ export function TodoListPage() {
   );
 
   return (
-    <>
+    <DefaultLayout>
       <Alert color="red" title="システムエラー" icon={<IconInfoCircle />}>
         データの取得に失敗しました
       </Alert>
@@ -65,6 +65,6 @@ export function TodoListPage() {
           onNavigateToEditTodoPage={handleNavigateToEditPage}
         />
       ))}
-    </>
+    </DefaultLayout>
   );
 }
