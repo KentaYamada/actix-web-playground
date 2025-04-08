@@ -49,7 +49,14 @@ export default tseslint.config(
       complexity: ["error", 10],
       ...reactHooks.configs.recommended.rules,
       "no-console": "warn",
-      "react/require-default-props": "off",
+      "prefer-arrow-callback": "error",
+      "react/function-component-definition": [
+        "error",
+        {
+          namedComponents: "function-declaration",
+          unnamedComponents: "arrow-function",
+        },
+      ],
       "react/jsx-props-no-spreading": "off",
       "react/jsx-uses-react": "off",
       "react/jsx-key": [
@@ -60,6 +67,7 @@ export default tseslint.config(
         },
       ],
       "react/react-in-jsx-scope": "off",
+      "react/require-default-props": "off",
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
