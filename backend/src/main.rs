@@ -1,5 +1,6 @@
 mod api;
 mod entity;
+mod infrastructure;
 mod repository;
 
 use actix_web::{guard, web, App, HttpServer};
@@ -9,7 +10,7 @@ use api::{
 };
 use dotenv::dotenv;
 use entity::app_state::AppData;
-use sqlx::postgres::PgPoolOptions;
+use infrastructure::postgres_client::init_connection_pool;
 use std::env;
 
 #[actix_web::main]
@@ -17,9 +18,7 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
 
     let url = env::var("DATABASE_URL").expect("[Fatal] DATABASE_URL must be set");
-    let pool = PgPoolOptions::new()
-        .max_connections(5)
-        .connect(&url)
+    let pool = init_connection_pool(&url, 5)
         .await
         .expect("[Fatal] Failed build connection pools.");
 
