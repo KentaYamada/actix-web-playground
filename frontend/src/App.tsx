@@ -3,12 +3,13 @@ import { StrictMode } from "react";
 import { BrowserRouter, Routes, Route } from "react-router";
 import { MantineProvider } from "@mantine/core";
 import {
+  NotfoundPage,
+  SigninPage,
+  SignupPage,
   TodoCreatePage,
   TodoEditPage,
   TodoListPage,
   UserViewPage,
-  SigninPage,
-  SignupPage,
 } from "@pages";
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
             <Route path="/todos/create" element={<TodoCreatePage />} />
             <Route path="/todos/:id/edit" element={<TodoEditPage />} />
             <Route path="/users/:id" element={<UserViewPage />} />
+            <Route path="*" element={<NotfoundPage />} />
           </Routes>
         </BrowserRouter>
       </MantineProvider>
