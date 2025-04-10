@@ -4,7 +4,7 @@ import { Center, Container, Paper, Text, Title } from "@mantine/core";
 export function NotfoundPage() {
   return (
     <Container>
-      <Center style={{ height: "100vh" }}>
+      <Center h="100vh">
         <Paper withBorder p="xl" style={{ textAlign: "center" }}>
           <Title order={2}>404</Title>
           <Title order={3}>NotFound</Title>
