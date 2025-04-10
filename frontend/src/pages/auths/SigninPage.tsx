@@ -2,36 +2,31 @@ import {
   Box,
   Button,
   Container,
-  Flex,
-  Input,
-  InputWrapper,
-  PasswordInput,
+  Center,
+  Paper,
+  TextInput,
+  Title,
 } from "@mantine/core";
 
 export function SigninPage() {
   return (
     <Container>
-      <Box>
-        <form>
-          <InputWrapper label="メールアドレス" required>
-            <Input type="text" placeholder="taro@email.com" />
-          </InputWrapper>
-          <InputWrapper label="パスワード" required>
-            <PasswordInput />
-          </InputWrapper>
-
-          <Flex
-            mt={12}
-            align="center"
-            direction="row"
-            gap="md"
-            justify="flex-end"
-            wrap="wrap"
-          >
-            <Button>サインイン</Button>
-          </Flex>
-        </form>
-      </Box>
+      <Center h="100vh">
+        <Paper withBorder p="md">
+          <Title order={4}>サインイン</Title>
+          <form>
+            <TextInput label="ユーザー名" placeholder="Taro" withAsterisk />
+            <TextInput
+              label="メールアドレス"
+              placeholder="taro@email.com"
+              withAsterisk
+            />
+            <Box mt="md">
+              <Button fullWidth>サインイン</Button>
+            </Box>
+          </form>
+        </Paper>
+      </Center>
     </Container>
   );
 }
