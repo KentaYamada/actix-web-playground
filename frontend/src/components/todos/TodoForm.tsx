@@ -1,15 +1,10 @@
 import { Button, Flex, Select, Textarea, TextInput } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
 import { IconPlus } from "@tabler/icons-react";
-
-interface FormValues {
-  status: number;
-  title: string;
-  detail: string;
-}
+import { TodoFormValuesType } from "@hooks";
 
 interface Props {
-  form: UseFormReturnType<FormValues>;
+  form: UseFormReturnType<TodoFormValuesType>;
   onSave: () => void;
 }
 
