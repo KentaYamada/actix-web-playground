@@ -1,36 +1,35 @@
-import { useMemo } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { TodoFormValues, TodoFormValuesType } from "./schema";
+import { useCallback, useMemo } from "react";
+import { zodResolver } from "mantine-form-zod-resolver";
+import { useForm } from "@mantine/form";
+import { Todo } from "@entity";
+import { TodoFormValues } from "./schema";
 
 export function useTodoForm() {
-  const {
-    control,
-    formState: { errors, isSubmitted },
-    handleSubmit,
-  } = useForm<TodoFormValuesType>({
-    mode: "onSubmit",
-    defaultValues: {
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
       id: 0,
       status: 0,
       title: "",
       detail: "",
     },
-    resolver: zodResolver(TodoFormValues),
+    validate: zodResolver(TodoFormValues),
   });
+  const { errors, resetDirty, setValues } = form;
 
-  const invalid = useMemo(
-    function () {
-      return Object.keys(errors).length > 0;
+  const invalid = useMemo(() => Object.keys(errors).length > 0, [errors]);
+
+  const updateFormValues = useCallback(
+    (payload: Todo) => {
+      setValues(payload);
+      resetDirty(payload);
     },
-    [errors],
+    [setValues, resetDirty],
   );
 
   return {
-    control,
-    errors,
+    form,
     invalid,
-    isSubmitted,
-    handleSubmit,
+    updateFormValues,
   };
 }
