@@ -1,48 +1,53 @@
-import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { Alert } from "@mantine/core";
-import { IconInfoCircle } from "@tabler/icons-react";
+import { Text, Title } from "@mantine/core";
 import { DefaultLayout, StatusFilter, TodoListItem } from "@components";
-import { Todo } from "@entity";
+import { ApiResponseError, Todo } from "@entity";
+import {
+  ConfirmDialog,
+  ErrorMessage,
+  useConfirmDialog,
+  useErrorMessage,
+} from "@shared/ui";
+import { useTodoApi } from "@hooks/todos";
 
 export function TodoListPage() {
   const navigate = useNavigate();
+  const {
+    errorMessageConfig,
+    visibleErrorMessage,
+    showErrorMessage,
+    hideErrorMessage,
+  } = useErrorMessage();
+  const {
+    confirmDialogConfig,
+    visibleConfirmDialog,
+    openConfirmDialog,
+    closeConfirmDialog,
+  } = useConfirmDialog();
+  const { searchTodos, deleteTodo } = useTodoApi();
   const [todos, setTodos] = useState<Todo[]>([]);
-  // const [todos] = useState<Todo[]>([
-  //   {
-  //     id: 1,
-  //     status: 0,
-  //     title: "test",
-  //     detail: "this is test",
-  //   },
-  //   {
-  //     id: 2,
-  //     status: 1,
-  //     title: "test",
-  //     detail: "this is test",
-  //   },
-  //   {
-  //     id: 3,
-  //     status: 2,
-  //     title: "test",
-  //     detail: "this is test",
-  //   },
-  // ]);
 
-  useEffect(() => {
-    axios
-      .get("/api/todos", {
-        headers: { "Content-Type": "application/json" },
-        data: {},
-      })
-      .then((res) => {
-        setTodos(res.data.todos);
-      })
-      .catch((err) => {
-        console.error(err);
+  const handleDeleteTodo = useCallback(
+    (id: number) => {
+      openConfirmDialog({
+        confirmButtonText: "削除",
+        cancelButtonText: "閉じる",
+        content: <Text>削除しますか？</Text>,
+        onCancel: () => closeConfirmDialog(),
+        onConfirm: () => {
+          closeConfirmDialog();
+          deleteTodo(id).catch((err: ApiResponseError) => {
+            showErrorMessage({
+              title: "システムエラー",
+              message: err.message,
+            });
+          });
+        },
       });
-  }, []);
+    },
+    [closeConfirmDialog, openConfirmDialog, deleteTodo, showErrorMessage],
+  );
 
   const handleNavigateToEditPage = useCallback(
     (id: number) => {
@@ -51,20 +56,35 @@ export function TodoListPage() {
     [navigate],
   );
 
+  useEffect(() => {
+    hideErrorMessage();
+    searchTodos()
+      .then((res) => setTodos(res.data.todos))
+      .catch((err: ApiResponseError) =>
+        showErrorMessage({
+          title: "システムエラー",
+          message: err.message,
+        }),
+      );
+  }, [searchTodos, showErrorMessage, hideErrorMessage]);
+
   return (
     <DefaultLayout>
-      <Alert color="red" title="システムエラー" icon={<IconInfoCircle />}>
-        データの取得に失敗しました
-      </Alert>
-      <h2>Todo list </h2>
+      <ErrorMessage visible={visibleErrorMessage} config={errorMessageConfig} />
+      <Title order={2}>Todo list </Title>
       <StatusFilter />
       {todos.map((todo: Todo) => (
         <TodoListItem
           key={todo.id}
           todo={todo}
+          onDeleteTodo={handleDeleteTodo}
           onNavigateToEditTodoPage={handleNavigateToEditPage}
         />
       ))}
+      <ConfirmDialog
+        config={confirmDialogConfig}
+        visible={visibleConfirmDialog}
+      />
     </DefaultLayout>
   );
 }
