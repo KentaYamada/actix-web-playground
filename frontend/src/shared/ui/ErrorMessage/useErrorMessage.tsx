@@ -1,25 +1,29 @@
 import { useCallback, useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
 import { ErrorMessageConfig } from "./ErrorMessageConfig";
 
 export function useErrorMessage() {
+  const [opened, { open, close }] = useDisclosure(false);
   const [config, setConfig] = useState<ErrorMessageConfig>({
     title: "",
     message: "",
   });
-  const [visible, setVisible] = useState<boolean>(false);
 
   const hideErrorMessage = useCallback(() => {
-    setVisible(false);
-  }, []);
+    close();
+  }, [close]);
 
-  const showErrorMessage = useCallback((config: ErrorMessageConfig) => {
-    setConfig(config);
-    setVisible(true);
-  }, []);
+  const showErrorMessage = useCallback(
+    (config: ErrorMessageConfig) => {
+      setConfig(config);
+      open();
+    },
+    [open],
+  );
 
   return {
     errorMessageConfig: config,
-    visibleErrorMessage: visible,
+    visibleErrorMessage: opened,
     hideErrorMessage,
     showErrorMessage,
   };
