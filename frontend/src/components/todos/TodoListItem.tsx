@@ -9,22 +9,24 @@ import { TodoListItemActions } from "./TodoListItemActions";
 interface Props {
   todo: Todo;
 
+  onDeleteTodo: (id: number) => void;
+
   onNavigateToEditTodoPage: (id: number) => void;
 }
 
 export function TodoListItem(props: Props) {
-  const { todo, onNavigateToEditTodoPage } = props;
+  const { todo, onDeleteTodo, onNavigateToEditTodoPage } = props;
 
   const handleDeleteTodo = useCallback(() => {
-    console.log("delete");
-  }, []);
+    onDeleteTodo(todo.id);
+  }, [onDeleteTodo, todo.id]);
 
   const handleEditTodo = useCallback(() => {
     onNavigateToEditTodoPage(todo.id);
   }, [onNavigateToEditTodoPage, todo.id]);
 
   return (
-    <Paper withBorder>
+    <Paper withBorder p="md">
       <Flex direction="row" justify="space-between">
         <ReadyLabel visible={todo.status === 0} />
         <InProgressLabel visible={todo.status === 1} />
