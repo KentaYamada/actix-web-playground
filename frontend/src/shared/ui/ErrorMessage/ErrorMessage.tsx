@@ -1,6 +1,6 @@
 import { Alert } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
-import { ErrorMessageConfig } from "@hooks/shared";
+import { ErrorMessageConfig } from "./ErrorMessageConfig";
 
 interface Props {
   visible: boolean;
