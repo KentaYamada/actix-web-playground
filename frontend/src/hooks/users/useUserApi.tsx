@@ -7,14 +7,16 @@ const ENDPOINT: string = "/api/users";
 export function useUserApi() {
   const getUserApi = useCallback(async (id: number) => {
     return await axios.get(`${ENDPOINT}/${id}`, {
-      headers: { "Content-Type": "application/json" },
-      data: {},
+      headers: { Accept: "application/json" },
     });
   }, []);
 
   const updateUserApi = useCallback(async (payload: User) => {
     return await axios.put(`${ENDPOINT}/${payload.id}`, payload, {
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
     });
   }, []);
 

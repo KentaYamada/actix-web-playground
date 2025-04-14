@@ -7,26 +7,46 @@ const ENDPOINT: string = "/api/todos";
 export function useTodoApi() {
   const createTodoApi = useCallback(async (payload: Todo) => {
     return await axios.post(ENDPOINT, payload, {
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
     });
   }, []);
 
   const deleteTodo = useCallback(async (id: number) => {
     return await axios.delete(`${ENDPOINT}/${id}`, {
-      headers: { "Content-Type": "application/json" },
+      headers: { Accept: "application/json" },
     });
   }, []);
 
+  const getTodoApi = useCallback(async (id: number) => {
+    return await axios.get(`${ENDPOINT}/${id}`, {
+      headers: { Accept: "application/json" },
+    });
+  }, []);
+
+  // todo: search parameters
   const searchTodos = useCallback(async () => {
     return await axios.get(ENDPOINT, {
-      headers: { "Content-Type": "application/json" },
-      data: {},
+      headers: { Accept: "application/json" },
+    });
+  }, []);
+
+  const updateTodoApi = useCallback(async (payload: Todo) => {
+    return await axios.put(`${ENDPOINT}/${payload.id}`, payload, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
     });
   }, []);
 
   return {
     createTodoApi,
-    searchTodos,
     deleteTodo,
+    getTodoApi,
+    searchTodos,
+    updateTodoApi,
   } as const;
 }
