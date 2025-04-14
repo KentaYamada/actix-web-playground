@@ -9,6 +9,7 @@ import {
   TodoCreatePage,
   TodoEditPage,
   TodoListPage,
+  UserEditPage,
   UserViewPage,
 } from "@pages";
 
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/todos/create" element={<TodoCreatePage />} />
             <Route path="/todos/:id/edit" element={<TodoEditPage />} />
             <Route path="/users/:id" element={<UserViewPage />} />
+            <Route path="/users/:id/edit" element={<UserEditPage />} />
             <Route path="*" element={<NotfoundPage />} />
           </Routes>
         </BrowserRouter>
