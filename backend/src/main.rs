@@ -3,7 +3,7 @@ mod entity;
 mod infrastructure;
 mod repository;
 
-use actix_web::{guard, web, App, HttpServer};
+use actix_web::{web, App, HttpServer};
 use api::{
     auths, todos,
     users::{create::create, delete::delete, list::list, update::update, view::view},
@@ -27,7 +27,6 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(AppData { db: pool.clone() }))
             .service(
                 web::scope("/api")
-                    .guard(guard::Header("content-type", "application/json"))
                     .route("/auths/signin", web::post().to(auths::signin_api::signin))
                     .route("/users", web::post().to(create))
                     .route("/users", web::get().to(list))
