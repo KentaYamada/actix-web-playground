@@ -19,6 +19,7 @@ export default function App() {
       <MantineProvider withGlobalClasses>
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<TodoListPage />} />
             <Route path="/auth/signin" element={<SigninPage />} />
             <Route path="/auth/signup" element={<SignupPage />} />
             <Route path="/todos" element={<TodoListPage />} />
