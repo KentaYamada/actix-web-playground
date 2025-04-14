@@ -1,22 +1,34 @@
 import { useEffect } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Breadcrumbs, Divider, Title } from "@mantine/core";
 import { DefaultLayout, TodoForm } from "@components";
-import { useTodoForm, TodoFormValuesType } from "@hooks";
+import { useTodoApi, useTodoForm, TodoFormValuesType } from "@hooks";
 import { ErrorMessage, useErrorMessage } from "@shared/ui";
+import { ApiResponseError, Todo } from "@entity";
 
 export function TodoCreatePage() {
+  const navigate = useNavigate();
   const {
     errorMessageConfig,
     visibleErrorMessage,
     showErrorMessage,
     hideErrorMessage,
   } = useErrorMessage();
+  const { createTodoApi } = useTodoApi();
   const { form, invalid } = useTodoForm();
 
   const handleSave = form.onSubmit((formValues: TodoFormValuesType) => {
+    const payload: Todo = { ...formValues };
+
     hideErrorMessage();
-    console.log(formValues);
+    createTodoApi(payload)
+      .then(() => navigate("/todos"))
+      .catch((err: ApiResponseError) => {
+        showErrorMessage({
+          title: "システムエラー",
+          message: err.message,
+        });
+      });
   });
 
   useEffect(() => {

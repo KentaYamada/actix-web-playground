@@ -1,13 +1,13 @@
 import axios from "axios";
 import { useCallback } from "react";
+import { Todo } from "@entity";
 
 const ENDPOINT: string = "/api/todos";
 
 export function useTodoApi() {
-  const searchTodos = useCallback(async () => {
-    return await axios.get(ENDPOINT, {
+  const createTodoApi = useCallback(async (payload: Todo) => {
+    return await axios.post(ENDPOINT, payload, {
       headers: { "Content-Type": "application/json" },
-      data: {},
     });
   }, []);
 
@@ -17,7 +17,15 @@ export function useTodoApi() {
     });
   }, []);
 
+  const searchTodos = useCallback(async () => {
+    return await axios.get(ENDPOINT, {
+      headers: { "Content-Type": "application/json" },
+      data: {},
+    });
+  }, []);
+
   return {
+    createTodoApi,
     searchTodos,
     deleteTodo,
   } as const;
